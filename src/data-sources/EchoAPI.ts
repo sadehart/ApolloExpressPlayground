@@ -10,6 +10,8 @@ export class EchoAPI extends RESTDataSource {
   }
 
   async echo(echo: string) {
+    console.log(this.memoizeGetRequests);
+    console.log(this.memoizedResults);
     // Send a GET request to the specified endpoint
     var ret = await this.get(`get?${echo}`);
     return ret.args;
