@@ -1,6 +1,8 @@
 import { ApolloServer } from 'apollo-server-express';
 import { gql } from 'apollo-server-express';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
+import responseCachePlugin from 'apollo-server-plugin-response-cache'
+import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache';
 import express from 'express';
 import http from 'http';
 import { EchoAPI } from './data-sources/EchoAPI.js';
@@ -12,8 +14,19 @@ const typeDefs = gql`#graphql
 
   scalar JSON
 
+  enum CacheControlScope {
+    PUBLIC
+    PRIVATE
+  }
+  
+  directive @cacheControl(
+    maxAge: Int
+    scope: CacheControlScope
+    inheritMaxAge: Boolean
+  ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+
   type Query {
-    echo(echo: String): JSON
+    echo(echo: String): JSON @cacheControl(maxAge: 30)
   }
 `;
 
@@ -25,6 +38,8 @@ const resolvers = {
     },
 };
 
+//this dumb piece of code is here because the response cache plugin isn't typed properly
+var cachePlugin : any = responseCachePlugin;
 
 async function listen(port: number) {
     const app = express();
@@ -36,10 +51,11 @@ async function listen(port: number) {
         typeDefs,
         resolvers,
         csrfPrevention: true,
-        cache: 'bounded',
+        cache: new InMemoryLRUCache(),
         plugins: [
 
             ApolloServerPluginLandingPageLocalDefault({ embed: true }),
+            cachePlugin.default(),
 
         ],
 
