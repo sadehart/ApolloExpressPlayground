@@ -1,0 +1,34 @@
+{
+  "name": "apolloexpressplayground",
+  "version": "1.0.0",
+  "description": "Mostly for making small bug demos",
+  "main": "index.js",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "scripts": {
+    "compile": "tsc",
+    "postinstall": "npm run compile",
+    "start": "npm run compile && node ./dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sadehart/ApolloExpressPlayground.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sadehart/ApolloExpressPlayground/issues"
+  },
+  "homepage": "https://github.com/sadehart/ApolloExpressPlayground#readme",
+  "dependencies": {
+    "@apollo/server": "^4.0.0",
+    "apollo-datasource-rest": "^3.7.0",
+    "apollo-server-express": "^3.10.3",
+    "graphql": "^16.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.0",
+    "typescript": "^4.8.4"
+  }
+}
